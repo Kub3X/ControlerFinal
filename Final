@@ -201,7 +201,7 @@ public class Controller implements Initializable
         {
             if(m.equalsIgnoreCase(Film1Title)){
                 DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('1','"+PlayListID+"')");
-            }
+                //DB.insertSQL("Insert into TblListOfPlayList(fldVideoURL) Where fldName = '"movies"')")            }
             else if(m.equalsIgnoreCase(Film2Title)){
                 DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('2','"+PlayListID+"')");
             }
