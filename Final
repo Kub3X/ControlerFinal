@@ -1,0 +1,244 @@
+package sample;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
+import javafx.scene.media.*;
+import javafx.scene.control.Button;
+
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+public class Controller implements Initializable
+{
+    int count = 0;
+    int playlistcount = 1;
+    @FXML
+    private MediaView mediaV;
+    private MediaPlayer mp;
+    private MediaPlayer mp2;
+    private MediaPlayer mp3;
+    private Media movie1;
+    private Media movie2;
+    private Media movie3;
+    private Media movie4;
+    private Media movie5;
+    private Media movie6;
+    private Media movie7;
+    private Media movie8;
+    private Media movie9;
+    private Media movie10;
+    int PlayListID;
+    @FXML
+    private Button btnPlay;
+    @FXML
+    private Button btnSelectVideo;
+    @FXML private ListView ListOfPlaylist1;
+    @FXML
+    private Button btnStop;
+    @FXML
+    private Button btnPause;
+    @FXML
+    private Button btnNextVideo;
+    @FXML
+    private Button btnPreviousVideo;
+    @FXML
+    private ListView<String> FilmListView;
+    @FXML
+    private Button btnCreatePlaylist;
+    private Button btnAddVideo;
+    @FXML ListView<String> FilmListView1;
+    @FXML ListView<String> PlaylistListView;
+    String Film1Title = "ACDC Thunderstruck";
+    String Film2Title = "Beethoven Elise";
+    String Film3Title = "Damian jr Medication";
+    String Film4Title = "Eminem Lose yourself";
+    String Film5Title = "Eminem Venom";
+    String Film6Title = "Hannah montana";
+    String Film7Title = "Michael Jackson Bille Jean";
+    String Film8Title = "Nirvana Smells like ten spirit";
+    String Film9Title = "Mozart Lacrimosa";
+    String Film10Title = "10 min timer";
+    ObservableList<String> Playlist;
+    ArrayList<String> playlist = new ArrayList<String>(Collections.singleton(DB.getDisplayData()));
+    public void initialize(URL location, ResourceBundle resources){
+        // Build the paths to the locations of the media files
+        // DB.SelectSQL("Select fldURL From tblVideo Where fldFilmName = "+ filmname)
+        String filmpath1 = new File("C:\\Users\\filip\\IdeaProjects\\yt2\\src\\sample\\Media\\y2mate.com - acdc_thunderstruck_official_video_v2AC41dglnM_144p.mp4").getAbsolutePath();
+        String filmpath2 = new File("C:\\Users\\filip\\IdeaProjects\\yt2\\src\\sample\\Media\\y2mate.com - beethoven_fr_elise_wfF0zHeU3Zs_144p.mp4").getAbsolutePath();
+        String filmpath3 = new File("C:\\Users\\filip\\IdeaProjects\\yt2\\src\\sample\\Media\\y2mate.com - damian_jr_gong_marley_medication_ft_stephen_marley_9PukqhfMxfc_144p.mp4").getAbsolutePath();
+        String filmpath4 = new File("C:\\Users\\filip\\IdeaProjects\\yt2\\src\\sample\\Media\\y2mate.com - eminem_lose_yourself_hd__Yhyp-_hX2s_144p.mp4").getAbsolutePath();
+        String filmpath5 = new File("C:\\Users\\filip\\IdeaProjects\\yt2\\src\\sample\\Media\\y2mate.com - eminem_venom_8CdcCD5V-d8_144p.mp4").getAbsolutePath();
+        String filmpath6 = new File("C:\\Users\\filip\\IdeaProjects\\yt2\\src\\sample\\Media\\y2mate.com - hannah_montana_nobodys_perfect_t93u0qg5q_M_144p.mp4").getAbsolutePath();
+        String filmpath7 = new File("C:\\Users\\filip\\IdeaProjects\\yt2\\src\\sample\\Media\\y2mate.com - michael_jackson_billie_jean_official_music_video_Zi_XLOBDo_Y_144p.mp4").getAbsolutePath();
+        String filmpath8 = new File("C:\\Users\\filip\\IdeaProjects\\yt2\\src\\sample\\Media\\y2mate.com - mozart_lacrimosa_k1-TrAvp_xs_144p.mp4").getAbsolutePath();
+        String filmpath9 = new File("C:\\Users\\filip\\IdeaProjects\\yt2\\src\\sample\\Media\\y2mate.com - nirvana_smells_like_teen_spirit_hTWKbfoikeg_144p.mp4").getAbsolutePath();
+        String filmpath10 = new File("C:\\Users\\filip\\IdeaProjects\\yt2\\src\\sample\\Media\\y2mate.com - 10_minute_timer_4ASKMcdCc3g_144p.mp4").getAbsolutePath();
+        // Create new Media objects (the actual media content)
+        movie1 = new Media(new File(filmpath1).toURI().toString());
+        movie2 = new Media(new File(filmpath2).toURI().toString());
+        movie3 = new Media(new File(filmpath3).toURI().toString());
+        movie4  = new Media(new File(filmpath4).toURI().toString());
+        movie5  = new Media(new File(filmpath5).toURI().toString());
+        movie6  = new Media(new File(filmpath6).toURI().toString());
+        movie7  = new Media(new File(filmpath7).toURI().toString());
+        movie8  = new Media(new File(filmpath8).toURI().toString());
+        movie9  = new Media(new File(filmpath9).toURI().toString());
+        movie10  = new Media(new File(filmpath10).toURI().toString());
+        // Create new MediaPlayer and attach the media to be played
+        mp = new MediaPlayer(movie1);
+        mediaV.setMediaPlayer(mp);
+        // mp.setAutoPlay(true);
+        // If autoplay is turned of the method play(), stop(), pause() etc controls how/when medias are played
+        mp.setAutoPlay(false);
+        DB.selectSQL("Select FldName from TblListOfPlayList");
+        String Playlistname = DB.getDisplayData();
+        PlaylistListView.getItems().addAll(Playlistname);
+        ListOfPlaylist1.getItems().addAll(Playlistname);
+
+
+        FilmListView.getItems().addAll(Film1Title, Film2Title, Film3Title,Film4Title,Film5Title,Film6Title,Film7Title,Film8Title,Film9Title,Film10Title);
+        FilmListView1.getItems().addAll(Film1Title, Film2Title, Film3Title,Film4Title,Film5Title,Film6Title,Film7Title,Film8Title,Film9Title,Film10Title);
+        btnSelectVideo.setOnAction(e-> handlebtnSelectVideo());
+        ObservableList<String> movies = FXCollections.observableArrayList(Film1Title,Film2Title,Film3Title,Film4Title,Film5Title,Film6Title,Film7Title,Film8Title,Film9Title,Film10Title);
+        ListView<String> FilmListView = new ListView<>(movies);
+        ListView<String> FilmListView1= new ListView<>(movies);
+    }
+
+    @FXML
+    private void handlebuttonPlay(){
+        mp.play();
+
+    }
+    @FXML
+    private void handlebuttonStop(){
+        mp.stop();
+    }
+    @FXML
+    private void handlebuttonPause(){
+        mp.pause();
+    }
+    @FXML
+    private void handlebtnNextVideo(){
+        {
+            mp.stop();
+            for(int i = count; i<=0  ;i--)
+            {
+                count--;
+                if(btnPreviousVideo.isPressed())
+                {
+                    break;
+                }
+            }
+        }
+    }
+    @FXML
+    private void handlebtnPreviousVideo() {
+            mp.stop();
+            for(int i = count; i<playlist.size();i++)
+            {
+                count++;
+                if(btnNextVideo.isPressed()){
+                    break;
+                }
+            }
+    }
+
+    @FXML
+    public void handlebtnSelectVideo() {
+
+        System.out.println("selected");
+        mp.stop();
+        ObservableList<String> movies;
+        movies = FilmListView.getSelectionModel().getSelectedItems();
+        System.out.println("selected");
+        mp.stop();
+
+
+        DB.selectSQL("Select FldUrl From tblvideos where FLDFILMNAME = '" + movies + "'");
+        String filmpath = DB.getDisplayData();
+
+        movie1 = new Media(new File(filmpath).toURI().toString());
+        mp = new MediaPlayer(movie1);
+        mediaV.setMediaPlayer(mp);
+
+    }
+    @FXML private void Playlistpick(){
+    ObservableList<String> playlistpick= PlaylistListView.getSelectionModel().getSelectedItems();
+    DB.selectSQL("SELECT FldUrl FROM TblPlaylist1 WHERE FldPlaylistName = " +playlistpick );
+    playlist.add(DB.getDisplayData());
+    movie2= new Media(new File(playlist.get(count)).toURI().toString());
+    mp = new MediaPlayer(movie2);
+    mediaV.setMediaPlayer(mp);
+}
+
+
+
+
+
+
+    @FXML TextField txtAddPlaylistName;
+    @FXML private void btnCreatePlaylist(){
+        playlistcount++;
+        String playlistname = txtAddPlaylistName.getText();
+        txtAddPlaylistName.setText("Done");
+        DB.insertSQL("Insert into TblListOfPlayList(FldID,FldName) Values('"+playlistcount+"','"+playlistname+"')");
+
+
+
+
+
+    }
+    @FXML private void AddVideoToPlaylist(){
+        ObservableList<String> movies;
+        movies = FilmListView1.getSelectionModel().getSelectedItems();
+        for(String m:movies)
+        {
+            if(m.equalsIgnoreCase(Film1Title)){
+                DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('1','"+PlayListID+"')");
+            }
+            else if(m.equalsIgnoreCase(Film2Title)){
+                DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('2','"+PlayListID+"')");
+            }
+            else if(m.equalsIgnoreCase(Film3Title)){
+                DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('3','"+PlayListID+"')");
+            }
+            else if(m.equalsIgnoreCase(Film4Title)){
+                DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('4','"+PlayListID+"')");
+            }
+            else if(m.equalsIgnoreCase(Film5Title)){
+                DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('5','"+PlayListID+"')");
+            }
+            else if(m.equalsIgnoreCase(Film6Title)){
+                DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('6','"+PlayListID+"')");
+
+            }
+            else if(m.equalsIgnoreCase(Film7Title)){
+                DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('7','"+PlayListID+"')");
+            }
+            else if(m.equalsIgnoreCase(Film8Title)){
+                DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('8','"+PlayListID+"')");
+            }
+            else if(m.equalsIgnoreCase(Film9Title)){
+                DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('9','"+PlayListID+"')");
+            }
+            else if(m.equalsIgnoreCase(Film10Title)){
+                DB.insertSQL("Insert into TblPlaylist1(FldVidoID,FldPlayListID) Values('10','"+PlayListID+"')");
+            }
+            else{
+                System.out.println("There is a problem!");
+            }
+        }
+    }
+    @FXML public void SelectPlaylist(){
+        Playlist = ListOfPlaylist1.getSelectionModel().getSelectedItems();
+       DB.selectSQL("Select FldID from TblListOfPlayList where FldName ='"+Playlist+"'");
+        String PlaylistID = DB.getDisplayData();
+        PlayListID = Integer.parseInt(PlaylistID);
+ }
+}
